@@ -1,0 +1,28 @@
+This product includes software developed by Actian Corporation (http://www.actian.com/).
+
+In addition, this product includes the following maven dependencies :
+
+    <dependency>
+      <groupId>org.apache.spark</groupId>
+      <artifactId>spark-core_2.10</artifactId>
+      <version>${spark.core.version}</version>
+      <scope>provided</scope>
+     <dependency>
+    	<groupId>org.apache.spark</groupId>
+    	<artifactId>spark-streaming-kafka_2.10</artifactId>
+    	<version>1.6.1</version>
+    	<scope>provided</scope>
+    </dependency>
+    <dependency>
+    	<groupId>org.apache.spark</groupId>
+    	<artifactId>spark-streaming_2.10</artifactId>
+    	<version>1.6.1</version>
+    	<scope>provided</scope>
+    </dependency>
+    <dependency>
+    	<groupId>org.apache.spark</groupId>
+    	<artifactId>spark-sql_2.10</artifactId>
+    	<version>1.6.1</version>
+    </dependency>
+
+

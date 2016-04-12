@@ -1,4 +1,4 @@
-# KafkaSparkVector-
+# KafkaSparkVector
 
 The package "com.actian.KafkaSparkVector" aims to help to start with Kafka/Spark/Vector streaming.
 In this example we provides a very simple code  which streams Kafka messages into Actian Vector[H].
@@ -57,6 +57,9 @@ C) Run the demo
 	$ export M2_REPO=$HOME/.m2/repository       ## Path to you maven repository
 	
 	$ $SPARK_HOME/bin/spark-submit --jars $SPARK_VECTOR/target/spark_vector-assembly-1.0-SNAPSHOT.jar,$M2_REPO/com/yammer/metrics/metrics-core/2.2.0/metrics-core-2.2.0.jar,$M2_REPO/org/apache/kafka/kafka_2.10/0.8.2.1/kafka_2.10-0.8.2.1.jar,$SPARK_HOME/external/kafka/target/spark-streaming-kafka_2.10-1.6.1.jar --class "com.actian.KafkaSparkVector.SimpleApp" --master "local[4]" $DEMO/target/KafkaSparkVector-1.0-SNAPSHOT.jar
+
+
+	=> Send message using the Kafka producer describe below 
 
 
 
@@ -149,13 +152,6 @@ Required pre-steps to make the demo running.
 
 
 	
-
-5 - Install KafkaSparkVector from github
-
-
-	$ export ACTIAN_HOME=/opt/Actian && export KAFKA_VECTOR=$ACTIAN_HOME/KafkaSparkVector
-
-	$ 
 
 
 
