@@ -22,7 +22,8 @@ B) Build the demo :
 
 	$ cd $ACTIAN_HOME
 
-	$ git clone https://github.com/ActianCorp/KafkaSparkVector
+	$ git clone https://github.com/OlivierMeignan/KafkaSparkVector.git
+
 
 	$ cd $DEMO
 
