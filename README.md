@@ -1,8 +1,8 @@
 # KafkaSparkVector
 
 The package "com.actian.KafkaSparkVector" aims to help to start with Kafka/Spark/Vector streaming.
-In this example we provides a very simple code  which streams Kafka messages into Actian Vector[H].
-Scheduling, intermediate transformations and parallelization of streams into Vector[H] is insured by 
+In this example we provides a very simple code  which streams Kafka messages into Actian Vector/VectorH.
+Scheduling, intermediate transformations and parallelization of streams into Vector/VectorH is insured by 
 a Spark streaming job.
 
 In this demo, we write through th Kafka producer described in the Quick start at : http://kafka.apache.org. 
@@ -145,7 +145,7 @@ Required pre-steps to make the demo running.
 
 
   
-4 - Create a table to store Kafka messages into your Actian-Vector[H] database
+4 - Create a table to store Kafka messages into your Actian Vector/VectorH database
 
 	$ sql test
 		create table kafka ( a varchar32 )\g
