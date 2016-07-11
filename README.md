@@ -1,13 +1,13 @@
 # KafkaSparkVector
 
-The package "com.actian.KafkaSparkVector" aims to help to start with Kafka/Spark/Vector streaming.
-In this example we provides a very simple code  which streams Kafka messages into Actian Vector/VectorH.
+The package "com.actian.KafkaSparkVector" aims to provide a quick start with Kafka/Spark/Vector streaming.
+In this example we provide some simple code  which streams Kafka messages into a singleActian Vector/VectorH database table.
 Scheduling, intermediate transformations and parallelization of streams into Vector/VectorH is insured by 
 a Spark streaming job.
 
 In this demo, we write through th Kafka producer described in the Quick start at : http://kafka.apache.org. 
-The Kafka message is gathered and processed into Spark SQL before to be loaded into Vector in a parallel 
-streaming fashion.
+The Kafka message is gathered and processed into Spark SQL before being loaded into Vector in a parallel 
+streaming fashion through Actian's Spark-Vector connector.
 
 
 A) Check demo environment is ready (see Pre-build steps below)
@@ -42,7 +42,7 @@ B) Build the demo :
 		// Init Kafka spark streaming
 		val interval : Duration = Seconds(2)
 		val topics   : String = "test"                       // A comma separated list of Kafka topics
-		val brokers  : String = "localhost:9092"             // The kafka brocker
+		val brokers  : String = "localhost:9092"             // The kafka broker
 
 
 	$ mvn package
@@ -55,7 +55,7 @@ C) Run the demo
         $ export SPARK_HOME=$ACTIAN_HOME/spark-1.6.1
         $ export DEMO=$ACTIAN_HOME/KafkaSparkVector
 
-	$ export M2_REPO=$HOME/.m2/repository       ## Path to you maven repository
+	$ export M2_REPO=$HOME/.m2/repository       ## Path to your maven repository
 	
 	$ $SPARK_HOME/bin/spark-submit --jars $SPARK_VECTOR/target/spark_vector-assembly-1.0-SNAPSHOT.jar,$M2_REPO/com/yammer/metrics/metrics-core/2.2.0/metrics-core-2.2.0.jar,$M2_REPO/org/apache/kafka/kafka_2.10/0.8.2.1/kafka_2.10-0.8.2.1.jar,$SPARK_HOME/external/kafka/target/spark-streaming-kafka_2.10-1.6.1.jar --class "com.actian.KafkaSparkVector.SimpleApp" --master "local[4]" $DEMO/target/KafkaSparkVector-1.0-SNAPSHOT.jar
 
@@ -72,7 +72,7 @@ Required pre-steps to make the demo running.
 
 1 - Install Kafka from Quick start at "http://kafka.apache.org" 
 
-	Ex: 
+	Example: 
 
 	$ export ACTIAN_HOME=/opt/Actian && export KAFKA_HOME=$ACTIAN_HOME/kafka
 
@@ -114,7 +114,7 @@ Required pre-steps to make the demo running.
 
 2 - Install Spark 1.6.1 from https://spark.apache.org/
 
-	Ex:
+	Example:
 	
 	$ export ACTIAN_HOME=/opt/Actian && export SPARK_HOME=$ACTIAN_HOME/spark-1.6.1
 
@@ -126,7 +126,7 @@ Required pre-steps to make the demo running.
 
 3 - Install Spark-Vector from https://github.com/ActianCorp/spark-vector
 
-	Ex:
+	Example:
 
 	$ export ACTIAN_HOME=/opt/Actian && export SPARK_VECTOR=$ACTIAN_HOME/spark-vector
 
