@@ -16,7 +16,7 @@ A) Check demo environment is ready (see Pre-build steps below)
 B) Build the demo :
 
 
-	$ export ACTIAN_HOME=/opt/Actian && export DEMO=$ACTIAN_HOME/KafkaSparkVector 
+	$ export ACTIAN_HOME=/opt/Actian && export DEMO=$ACTIAN_HOME/KafkaSparkVector
 
 	$ export M2_REPOS=$HOME/.m2
 
@@ -27,23 +27,7 @@ B) Build the demo :
 
 	$ cd $DEMO
 
-	$ vi src/main/scala/com/actian/KafkaSparkVector/SimpleApp.scala
-
-		// Change connection properties to fit your demo environment 
-		var rs  =     sqlContext.sql("""CREATE TEMPORARY TABLE kafka
-						USING com.actian.spark_vector.sql.DefaultSource
-						OPTIONS (
-						host "localhost",
-						instance "V5",
-						database "dbt3",
-						table "kafka" )""")
-    
-    
-		// Init Kafka spark streaming
-		val interval : Duration = Seconds(2)
-		val topics   : String = "test"                       // A comma separated list of Kafka topics
-		val brokers  : String = "localhost:9092"             // The kafka broker
-
+	$ vi src/main/scala/com/actian/KafkaSparkVector/SimpleApp.scala # change the settings as necessary
 
 	$ mvn package
 
@@ -52,12 +36,12 @@ C) Run the demo
 
 	$ export ACTIAN_HOME=/opt/Actian 
 	$ export SPARK_VECTOR=$ACTIAN_HOME/spark-vector
-        $ export SPARK_HOME=$ACTIAN_HOME/spark-1.6.1
-        $ export DEMO=$ACTIAN_HOME/KafkaSparkVector
+    $ export SPARK_HOME=$ACTIAN_HOME/spark
+    $ export DEMO=$ACTIAN_HOME/KafkaSparkVector
 
 	$ export M2_REPO=$HOME/.m2/repository       ## Path to your maven repository
 	
-	$ $SPARK_HOME/bin/spark-submit --jars $SPARK_VECTOR/target/spark_vector-assembly-1.0-SNAPSHOT.jar,$M2_REPO/com/yammer/metrics/metrics-core/2.2.0/metrics-core-2.2.0.jar,$M2_REPO/org/apache/kafka/kafka_2.10/0.8.2.1/kafka_2.10-0.8.2.1.jar,$SPARK_HOME/external/kafka/target/spark-streaming-kafka_2.10-1.6.1.jar --class "com.actian.KafkaSparkVector.SimpleApp" --master "local[4]" $DEMO/target/KafkaSparkVector-1.0-SNAPSHOT.jar
+	$ $SPARK_HOME/bin/spark-submit --jars $SPARK_VECTOR/target/spark-vector-assembly-2.1-SNAPSHOT.jar,$M2_REPO/com/yammer/metrics/metrics-core/2.2.0/metrics-core-2.2.0.jar,$M2_REPO/org/apache/kafka/kafka_2.11/0.10.0.1/kafka_2.11-0.10.-.1.jar,$SPARK_HOME/external/kafka-0-10/target/spark-streaming-kafka-0-10_2.11-2.2.0.jar --class "com.actian.KafkaSparkVector.SimpleApp" --master "local[4]" $DEMO/target/KafkaSparkVector-1.0-SNAPSHOT.jar
 
 
 	=> Send message using the Kafka producer describe below 
@@ -78,27 +62,27 @@ Required pre-steps to make the demo running.
 
 	$ mkdir -p $ACTIAN_HOME
 	
-	$ wget http://wwwftp.ciril.fr/pub/apache/kafka/0.9.0.1/kafka_2.10-0.9.0.1.tgz
+	Download kafka tgz file from the 'net
 
-	$ tar xzf kafka_2.10-0.9.0.1.tgz -C$ACTIAN_HOME
+	$ tar xzf kafka_kafka_2.12-2.1.1.tgz -C $ACTIAN_HOME
 
-	$ ln -s $KAFKA_HOME/kafka_2.10-0.9.0.1 $ACTIAN_HOME/kafka
+	$ ln -s $KAFKA_HOME/kafka_ $ACTIAN_HOME/kafka
 
 	$ mkdir -p $KAFKA_HOME/logs
        
-        $ cd $KAFKA_HOME
+    $ cd $KAFKA_HOME
 
 	$ bin/zookeeper-server-start.sh config/zookeeper.properties 1>$KAFKA_HOME/logs/zookeeper.log 1>&1 &     ## Starts Zookeper
 
 	$ bin/kafka-server-start.sh config/server.properties 1>$KAFKA_HOME/logs/kafka-server.log 2>&1 &         ## Start Kafka server
 
-	$ bin/kafka-topics.sh --create --zookeeper localhost:2181 --replication-factor 1 --partitions 1 --topic test  ## Create topic "test"
+	$ bin/kafka-topics.sh --create --zookeeper localhost:2181 --replication-factor 1 --partitions 1 --topic test &  ## Create topic "test"
 
-	$ bin/kafka-topics.sh --list --zookeeper localhost:2181                                                       ## Check topic is created
+	$ bin/kafka-topics.sh --list --zookeeper localhost:2181                                                         ## Check topic is created
 
 		test
 
-        $ bin/kafka-console-consumer.sh --zookeeper localhost:2181 --topic test --from-beginning                      ## Start a consummer
+    $ bin/kafka-console-consumer.sh --zookeeper localhost:2181 --topic test --from-beginning                      ## Start a consummer
 
        
 
@@ -112,15 +96,15 @@ Required pre-steps to make the demo running.
 
 
 
-2 - Install Spark 1.6.1 from https://spark.apache.org/
+2 - Install Spark 2.2.0 from https://spark.apache.org/
 
 	Example:
 	
-	$ export ACTIAN_HOME=/opt/Actian && export SPARK_HOME=$ACTIAN_HOME/spark-1.6.1
+	$ export ACTIAN_HOME=/opt/Actian && export SPARK_HOME=$ACTIAN_HOME/spark-2.2.0
 
-	$ wget -c http://d3kbcqa49mib13.cloudfront.net/spark-1.6.1.tgz
+	Download spark-2.2.0 from the 'net
 
-	$ tar xf spark-1.6.1.tgz  -C $ACTIAN_HOME
+	$ tar xf spark-2.2.0.tgz  -C $ACTIAN_HOME
 
 
 
@@ -136,9 +120,9 @@ Required pre-steps to make the demo running.
 
 	$ cd $SPARK_VECTOR$  
 
-	$ export MAVEN_OPTS="-Xmx2g -XX:MaxPermSize=512M -XX:ReservedCodeCacheSize=512m"
+	$ export MAVEN_OPTS="-Xmx2g -XX:ReservedCodeCacheSize=512m"
 
-        $  build/mvn -DskipTests clean package
+    $ build/mvn -DskipTests clean package
 	
 	$ sbt assembly
 

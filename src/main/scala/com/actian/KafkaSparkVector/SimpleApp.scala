@@ -1,7 +1,7 @@
 package com.actian.KafkaSparkVector
 
 /*
- Copyright 2015 Actian Corporation
+ Copyright 2019 Actian Corporation
 
    Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
@@ -20,10 +20,16 @@ import kafka.serializer.StringDecoder
 
 import org.apache.spark.sql._
 import org.apache.spark.streaming._
-import org.apache.spark.streaming.kafka._
+import org.apache.spark.streaming.kafka010._
 import org.apache.spark.SparkConf
 import org.apache.spark.SparkContext
-import org.apache.spark.streaming.kafka.KafkaUtils
+import org.apache.spark.streaming.kafka010.KafkaUtils
+
+import org.apache.kafka.clients.consumer.ConsumerRecord
+import org.apache.kafka.common.serialization.StringDeserializer
+import org.apache.spark.streaming.kafka010.LocationStrategies.PreferConsistent
+import org.apache.spark.streaming.kafka010.ConsumerStrategies.Subscribe
+
 
 
 import com.actian._
@@ -36,17 +42,13 @@ object SimpleApp {
     // Init Spark context
     val sparkConf  = new SparkConf().setAppName("Simple Application")
     val sc         = new SparkContext(sparkConf)
-    
-    
-
-
 
     // Init SQL context
     val sqlContext = new SQLContext(sc) 
     import sqlContext.implicits._
     
     // Change connection properties to fit your demo environment
-    var rs  =     sqlContext.sql("""CREATE TEMPORARY TABLE kafka
+    var rs  =     sqlContext.sql("""CREATE TEMPORARY VIEW kafka
                               USING com.actian.spark_vector.sql.DefaultSource
                               OPTIONS (
                               host "localhost",
@@ -56,23 +58,28 @@ object SimpleApp {
     
     
     // Init Kafka spark streaming
-    val interval : Duration = Seconds(2)
-    val topics   : String = "test"                       // A comma separated list of Kafka topics
-    val brokers  : String = "localhost:9092"             // The kafka brocker
-    
-    val topicsSet   = topics.split(",").toSet
-    
-    val ssc         = new StreamingContext(sc, interval )
-    
-    val kafkaParams = Map[String, String]("metadata.broker.list" -> brokers)
-        
-    // Receives Kafka message
-    val messages = KafkaUtils.createDirectStream[String, String, StringDecoder, StringDecoder](
-        ssc, kafkaParams, topicsSet)
+    val kafkaParams = Map[String, Object](
+      "bootstrap.servers" -> "localhost:9092",
+      "key.deserializer" -> classOf[StringDeserializer],
+      "value.deserializer" -> classOf[StringDeserializer],
+      "group.id" -> "use_a_separate_group_id_for_each_stream",
+      "auto.offset.reset" -> "latest",
+      "enable.auto.commit" -> (false: java.lang.Boolean)
+    )
 
-    val m = messages.map(_._2)   // We keep value of the message
-    
-    
+    val interval : Duration = Seconds(2)
+    val ssc = new StreamingContext(sc, interval )
+
+    val topics = Array("test")
+    val messages = KafkaUtils.createDirectStream[String, String](
+      ssc,
+      PreferConsistent,
+      Subscribe[String, String](topics, kafkaParams)
+    )
+
+
+    val m = messages.map(record => (record.key, record.value))
+
     m.foreachRDD(msg => {
       if (msg.count() > 0) {
         val df = msg.toDF().registerTempTable("kafka_temp")
